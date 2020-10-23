@@ -1,0 +1,4 @@
+/build/
+/grnpy/*.c
+/grnpy/*.so
+/grnpy/__pycache__/
