@@ -1,4 +1,5 @@
+/.pytest_cache
 /build/
 /grnpy/*.c
 /grnpy/*.so
-/grnpy/__pycache__/
+__pycache__
