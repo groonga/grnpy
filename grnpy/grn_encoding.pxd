@@ -16,15 +16,12 @@
 
 # cython: language_level = 3
 
-from grnpy.grn_error cimport grn_rc
-from .error import Error
-
 cdef extern from "groonga.h":
-    grn_rc grn_init()
-    grn_rc grn_fin()
-
-def init():
-    Error.check(grn_init(), "failed to initialize Groonga")
-
-def fin():
-    Error.check(grn_fin(), "failed to finalize Groonga")
+    ctypedef enum grn_encoding:
+        DEFAULT "GRN_ENC_DEFAULT"
+        NONE "GRN_ENC_NONE"
+        EUC_JP "GRN_ENC_EUC_JP"
+        UTF8 "GRN_ENC_UTF8"
+        SJIS "GRN_ENC_SJIS"
+        LATIN1 "GRN_ENC_LATIN1"
+        KOI8R "GRN_ENC_KOI8R"

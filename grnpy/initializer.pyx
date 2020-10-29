@@ -17,20 +17,22 @@
 # cython: language_level = 3
 
 from grnpy.grn_error cimport grn_rc
+from .error import Error
 
 cdef extern from "groonga.h":
-    const char *grn_rc_to_string(grn_rc)
+    grn_rc grn_init()
+    grn_rc grn_fin()
 
-class Error(Exception):
-    @classmethod
-    def check(cls, rc, user_message=None):
-        if rc != grn_rc.SUCCESS:
-            raise cls(rc, user_message)
+class Initializer:
+    def __init__(self):
+        Error.check(grn_init(), "failed to initialize Groonga")
 
-    def __init__(self, rc, user_message=None):
-        self.rc = rc
-        self.user_message = user_message
-        self.message = grn_rc_to_string(self.rc)
+    def __del__(self):
+        Error.check(grn_fin(), "failed to finalize Groonga")
 
-    def __str__(self):
-        f"{self.rc}: {self.message}: {self.user_message}"
+_instance = None
+def instance():
+    global _instance
+    if _instance is None:
+        _instance = Initializer()
+    return _instance

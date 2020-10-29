@@ -14,15 +14,6 @@
 # License along with this program.  If not, see
 # <http://www.gnu.org/licenses/>.
 
-import grnpy.grn
+from grnpy.context import Context
 
 __version__ = '10.0.7'
-
-class Initializer:
-    def __init__(self):
-        grn.init()
-
-    def __del__(self):
-        grn.fin()
-
-__initializer__ = Initializer()
