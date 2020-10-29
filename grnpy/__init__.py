@@ -17,4 +17,6 @@
 from grnpy.context import Context
 from grnpy.database import Database
 
+import grnpy.rc
+
 __version__ = '10.0.7'
