@@ -16,6 +16,8 @@
 
 # cython: language_level = 3
 
+import os
+
 from grnpy.grn_ctx cimport grn_ctx
 from grnpy.grn_error cimport grn_rc
 from grnpy.grn_obj cimport grn_obj
@@ -41,6 +43,8 @@ cdef class Database(Object):
     def create(cls, path=None, Context context=None):
         if context is None:
             context = grnpy.context.default()
+        if path is not None:
+            path = os.fspath(path)
         if isinstance(path, str):
             path = path.encode()
         db = grn_db_create(context.unwrap(), path, NULL)
@@ -52,6 +56,9 @@ cdef class Database(Object):
     def open(cls, path, Context context=None):
         if context is None:
             context = grnpy.context.default()
+        path = os.fspath(path)
+        if isinstance(path, str):
+            path = path.encode()
         db = grn_db_open(context.unwrap(), path)
         if db is NULL:
             context.check(f"failed to open database: <{path}>")
