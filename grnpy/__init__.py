@@ -15,7 +15,6 @@
 # <http://www.gnu.org/licenses/>.
 
 import grnpy.grn
-import grnpy.ctx
 
 __version__ = '10.0.7'
 
