@@ -15,8 +15,9 @@
 # <http://www.gnu.org/licenses/>.
 
 # cython: language_level = 3
+# distutils: sources = grnpy/grnpy_ctx.c
 
-from grnpy.grn_context cimport grn_ctx
+from grnpy.grn_ctx cimport grn_ctx
 from grnpy.grn_error cimport grn_rc
 
 from .error import Error
@@ -26,10 +27,10 @@ cdef extern from "groonga.h":
     grn_ctx *grn_ctx_open(int flags)
     grn_rc grn_ctx_close(grn_ctx *ctx)
 
-cdef class Context:
-    cdef object _initializer
-    cdef grn_ctx *_ctx
+cdef extern from "grnpy_ctx.h":
+    grn_rc grnpy_ctx_get_rc(grn_ctx *ctx)
 
+cdef class Context:
     def __cinit__(self, flags=0):
         self._initializer = grnpy.initializer.instance()
         self._ctx = grn_ctx_open(flags)
@@ -38,6 +39,22 @@ cdef class Context:
 
     def __dealloc__(self):
         if self._ctx is not NULL:
-            Error.check(grn_ctx_close(self._ctx))
+            Error.check(grn_ctx_close(self._ctx), "failed to close context")
             self._ctx = NULL
         self._initializer = None
+
+    cdef grn_ctx *unwrap(self):
+        return self._ctx
+
+    def rc(self):
+        return grnpy_ctx_get_rc(self._ctx)
+
+    def check(self, user_message=None):
+        Error.check(self.rc(), user_message)
+
+_default = None
+def default():
+    global _default
+    if _default is None:
+        _default = Context()
+    return _default

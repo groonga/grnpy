@@ -15,5 +15,6 @@
 # <http://www.gnu.org/licenses/>.
 
 from grnpy.context import Context
+from grnpy.database import Database
 
 __version__ = '10.0.7'

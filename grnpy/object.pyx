@@ -16,21 +16,30 @@
 
 # cython: language_level = 3
 
+from grnpy.grn_ctx cimport grn_ctx
 from grnpy.grn_error cimport grn_rc
+from grnpy.grn_obj cimport grn_obj
+
+from grnpy.context cimport Context
+
+from .error import Error
+import grnpy.initializer
 
 cdef extern from "groonga.h":
-    const char *grn_rc_to_string(grn_rc)
+    grn_rc grn_obj_close(grn_ctx *ctx, grn_obj *obj)
 
-class Error(Exception):
-    @classmethod
-    def check(cls, rc, user_message=None):
-        if rc != grn_rc.SUCCESS:
-            raise cls(rc, user_message)
+cdef class Object:
+    def __dealloc__(self):
+        cdef Context context
+        if self._obj is not NULL:
+            context = self._context
+            Error.check(grn_obj_close(context.unwrap(), self._obj))
+            self._obj = NULL
+        self._context = None
 
-    def __init__(self, rc, user_message=None):
-        self.rc = rc
-        self.user_message = user_message
-        self.message = grn_rc_to_string(self.rc)
-
-    def __str__(self):
-        return f"{self.rc}: {self.message}: {self.user_message}"
+cdef build_object(cls, Context context, grn_obj *obj):
+    cdef Object object
+    object = cls()
+    object._context = context
+    object._obj = obj
+    return object
