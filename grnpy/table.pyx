@@ -14,10 +14,4 @@
 # License along with this program.  If not, see
 # <http://www.gnu.org/licenses/>.
 
-from grnpy.array import Array
-from grnpy.context import Context
-from grnpy.database import Database
-
-import grnpy.rc
-
-__version__ = '10.0.7'
+# cython: language_level = 3

@@ -14,10 +14,9 @@
 # License along with this program.  If not, see
 # <http://www.gnu.org/licenses/>.
 
-from grnpy.array import Array
-from grnpy.context import Context
-from grnpy.database import Database
+# cython: language_level = 3
 
-import grnpy.rc
+from grnpy.object cimport Object
 
-__version__ = '10.0.7'
+cdef class Table(Object):
+    pass

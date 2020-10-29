@@ -16,33 +16,28 @@
 
 # cython: language_level = 3
 
+from libc.stdint cimport uint32_t
+
 from grnpy.grn_ctx cimport grn_ctx
-from grnpy.grn_error cimport grn_rc
 from grnpy.grn_obj cimport grn_obj
 
-from grnpy.context cimport Context
-
-from .error import Error
-import grnpy.initializer
-
 cdef extern from "groonga.h":
-    grn_rc grn_obj_close(grn_ctx *ctx, grn_obj *obj)
+    ctypedef uint32_t grn_table_flags
 
-cdef class Object:
-    def __dealloc__(self):
-        cdef Context context
-        if self._obj is not NULL:
-            context = self._context
-            Error.check(grn_obj_close(context.unwrap(), self._obj))
-            self._obj = NULL
-        self._context = None
+    cdef grn_table_flags HASH_KEY "GRN_OBJ_TABLE_HASH_KEY"
+    cdef grn_table_flags PAT_KEY "GRN_OBJ_TABLE_PAT_KEY"
+    cdef grn_table_flags DAT_KEY "GRN_OBJ_TABLE_DAT_KEY"
+    cdef grn_table_flags NO_KEY "GRN_OBJ_TABLE_NO_KEY"
 
-    cdef grn_obj *unwrap(self):
-        return self._obj
+    cdef grn_table_flags KEY_WITH_SIS "GRN_OBJ_KEY_WITH_SIS"
 
-cdef build_object(cls, Context context, grn_obj *obj):
-    cdef Object object
-    object = cls()
-    object._context = context
-    object._obj = obj
-    return object
+    grn_obj *grn_table_create(grn_ctx *ctx,
+                              const char *name,
+                              unsigned int name_size,
+                              const char *path,
+                              grn_table_flags flags,
+                              grn_obj *key_type,
+                              grn_obj *value_type)
+
+cdef inline grn_table_flags parse_flags(flags):
+    return 0

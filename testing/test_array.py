@@ -14,10 +14,12 @@
 # License along with this program.  If not, see
 # <http://www.gnu.org/licenses/>.
 
-from grnpy.array import Array
-from grnpy.context import Context
-from grnpy.database import Database
+import pytest
 
-import grnpy.rc
+import grnpy
 
-__version__ = '10.0.7'
+def test_create(tmpdir):
+    db_path = tmpdir.join("db")
+    database = grnpy.Database.create(db_path)
+    array = grnpy.Array("Users")
+    del database
