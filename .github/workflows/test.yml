@@ -24,7 +24,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        ruby-version:
+        python-version:
           - 3.6
           - 3.7
           - 3.8
