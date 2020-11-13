@@ -26,14 +26,14 @@ from .error import Error
 import grnpy.initializer
 
 cdef extern from "groonga.h":
-    grn_rc grn_obj_close(grn_ctx *ctx, grn_obj *obj)
+    void grn_obj_unref(grn_ctx *ctx, grn_obj *obj)
 
 cdef class Object:
     def __dealloc__(self):
         cdef Context context
         if self._obj is not NULL:
             context = self._context
-            Error.check(grn_obj_close(context.unwrap(), self._obj))
+            grn_obj_unref(context.unwrap(), self._obj)
             self._obj = NULL
         self._context = None
 
