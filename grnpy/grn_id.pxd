@@ -16,6 +16,8 @@
 
 # cython: language_level = 3
 
+from libc.stdint cimport uint32_t
+
 cdef extern from "groonga.h":
     ctypedef uint32_t grn_id
     cdef grn_id NIL "GRN_ID_NIL"

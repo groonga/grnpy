@@ -19,6 +19,10 @@
 
 from grnpy.grn_ctx cimport grn_ctx
 from grnpy.grn_error cimport grn_rc
+from grnpy.grn_id cimport grn_id
+from grnpy.grn_obj cimport grn_obj
+
+from grnpy.object cimport build_object
 
 from .error import Error
 import grnpy.initializer
@@ -26,9 +30,15 @@ import grnpy.initializer
 cdef extern from "groonga.h":
     grn_ctx *grn_ctx_open(int flags)
     grn_rc grn_ctx_close(grn_ctx *ctx)
+    grn_obj *grn_ctx_at(grn_ctx *ctx,
+                        grn_id id)
+    grn_obj *grn_ctx_get(grn_ctx *ctx,
+                         const char *name,
+                         int name_size)
 
 cdef extern from "grnpy_ctx.h":
     grn_rc grnpy_ctx_get_rc(grn_ctx *ctx)
+    const char *grnpy_ctx_get_error_message(grn_ctx *ctx)
 
 cdef class Context:
     def __cinit__(self, flags=0):
@@ -49,8 +59,24 @@ cdef class Context:
     def rc(self):
         return grnpy_ctx_get_rc(self._ctx)
 
+    def error_message(self):
+        return grnpy_ctx_get_error_message(self._ctx)
+
     def check(self, user_message=None):
-        Error.check(self.rc(), user_message)
+        Error.check(self.rc(), user_message, self.error_message())
+
+    def __getitem__(self, name_or_id):
+        cdef grn_obj *obj
+        if isinstance(name_or_id, str):
+            name_c = name_or_id.encode()
+            name_c_size = len(name_c)
+            obj = grn_ctx_get(self._ctx, name_c, name_c_size)
+        else:
+            id = name_or_id
+            obj = grn_ctx_at(self._ctx, id)
+        if obj is NULL:
+            return None
+        return build_object(self, obj)
 
 _default = None
 def default():

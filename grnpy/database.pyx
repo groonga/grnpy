@@ -50,7 +50,7 @@ cdef class Database(Object):
         db = grn_db_create(context.unwrap(), path, NULL)
         if db is NULL:
             context.check(f"failed to create database: <{path}>")
-        return build_object(cls, context, db)
+        return build_object(context, db)
 
     @classmethod
     def open(cls, path, Context context=None):
@@ -62,4 +62,4 @@ cdef class Database(Object):
         db = grn_db_open(context.unwrap(), path)
         if db is NULL:
             context.check(f"failed to open database: <{path}>")
-        return build_object(cls, context, db)
+        return build_object(context, db)

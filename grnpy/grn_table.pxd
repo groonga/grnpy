@@ -31,6 +31,8 @@ cdef extern from "groonga.h":
 
     cdef grn_table_flags KEY_WITH_SIS "GRN_OBJ_KEY_WITH_SIS"
 
+    cdef grn_table_flags PERSISTENT "GRN_OBJ_PERSISTENT"
+
     grn_obj *grn_table_create(grn_ctx *ctx,
                               const char *name,
                               unsigned int name_size,

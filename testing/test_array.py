@@ -21,5 +21,8 @@ import grnpy
 def test_create(tmpdir):
     db_path = tmpdir.join("db")
     database = grnpy.Database.create(db_path)
-    array = grnpy.Array("Users")
-    del database
+    try:
+        array = grnpy.Array.create("Users")
+        assert array.name() == "Users"
+    finally:
+        database.close()

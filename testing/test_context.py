@@ -21,3 +21,12 @@ import grnpy
 def test_rc():
     context = grnpy.Context()
     assert context.rc() == grnpy.rc.SUCCESS
+
+def test_find(tmpdir):
+    db_path = tmpdir.join("db")
+    database = grnpy.Database.create(db_path)
+    try:
+        array = grnpy.Array.create("Users")
+        assert grnpy.find("Users") == array
+    finally:
+        database.close()

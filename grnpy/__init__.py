@@ -14,10 +14,15 @@
 # License along with this program.  If not, see
 # <http://www.gnu.org/licenses/>.
 
-from grnpy.array import Array
 from grnpy.context import Context
+import grnpy.context
+
+from grnpy.array import Array
 from grnpy.database import Database
 
 import grnpy.rc
+
+def find(name_or_id):
+    return grnpy.context.default()[name_or_id]
 
 __version__ = '10.0.7'

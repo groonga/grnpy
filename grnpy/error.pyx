@@ -23,14 +23,20 @@ cdef extern from "groonga.h":
 
 class Error(Exception):
     @classmethod
-    def check(cls, rc, user_message=None):
+    def check(cls, rc, user_message=None, system_message=None):
         if rc != grn_rc.SUCCESS:
-            raise cls(rc, user_message)
+            raise cls(rc, user_message, system_message)
 
-    def __init__(self, rc, user_message=None):
+    def __init__(self, rc, user_message=None, system_message=None):
         self.rc = rc
         self.user_message = user_message
         self.message = grn_rc_to_string(self.rc)
+        self.system_message = system_message
 
     def __str__(self):
-        return f"{self.rc}: {self.message}: {self.user_message}"
+        message = f"{self.rc}: {self.message.decode()}"
+        if self.system_message:
+            message += f": {self.system_message.decode()}"
+        if self.user_message:
+            message += f": {self.user_message}"
+        return message

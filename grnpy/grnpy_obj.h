@@ -20,5 +20,4 @@
 
 #include <groonga.h>
 
-grn_rc grnpy_ctx_get_rc(grn_ctx *ctx);
-const char *grnpy_ctx_get_error_message(grn_ctx *ctx);
+uint8_t grnpy_obj_get_type(grn_obj *obj);

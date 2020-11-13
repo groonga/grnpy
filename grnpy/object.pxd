@@ -26,4 +26,4 @@ cdef class Object:
 
     cdef grn_obj *unwrap(self)
 
-cdef build_object(cls, Context context, grn_obj *obj)
+cdef build_object(Context context, grn_obj *obj)
