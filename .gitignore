@@ -1,5 +1,8 @@
 /.pytest_cache
 /build/
+/dist/
+/grnpy.egg-info/
 /grnpy/*.c
+!/grnpy/grnpy_*.c
 /grnpy/*.so
 __pycache__

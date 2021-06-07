@@ -49,10 +49,7 @@ only_l = pkg_config('--libs-only-l', 'groonga')
 libraries = re.split(r'\s*-l', only_l.strip())[1::]
 extension = [
     setuptools.Extension('*',
-                         [
-                             'grnpy/*.pyx',
-                             'grnpy/grnpy_ctx.c',
-                         ],
+                         ['grnpy/*.pyx'],
                          include_dirs=include_dirs,
                          library_dirs=library_dirs,
                          libraries=libraries),
