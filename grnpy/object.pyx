@@ -1,4 +1,4 @@
-# Copyright (C) 2020  Sutou Kouhei <kou@clear-code.com>
+# Copyright (C) 2020-2021  Sutou Kouhei <kou@clear-code.com>
 #
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU Lesser General Public License as
@@ -30,6 +30,7 @@ from grnpy.context cimport Context
 from .array import Array
 from .database import Database
 from .error import Error
+from .type import Type
 import grnpy.initializer
 
 cdef extern from "groonga.h":
@@ -86,6 +87,8 @@ cdef class Object:
 def resolve_class(uint8_t type):
     if type == grnpy.grn_obj.TABLE_NO_KEY:
         return Array
+    elif type == grnpy.grn_obj.TYPE:
+        return Type
     elif type == grnpy.grn_obj.DB:
         return Database
     else:
