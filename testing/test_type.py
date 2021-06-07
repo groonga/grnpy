@@ -21,5 +21,5 @@ import grnpy
 def test_create(tmpdir):
     db_path = tmpdir.join('db')
     with grnpy.Database.create(db_path) as database:
-        short_text = grnpy.context.default()['ShortText']
+        short_text = grnpy.find('ShortText')
         assert short_text.name() == 'ShortText'
