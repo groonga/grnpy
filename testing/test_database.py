@@ -1,4 +1,4 @@
-# Copyright (C) 2020  Sutou Kouhei <kou@clear-code.com>
+# Copyright (C) 2020-2021  Sutou Kouhei <kou@clear-code.com>
 #
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU Lesser General Public License as
@@ -20,7 +20,7 @@ import grnpy
 
 def test_create_and_open(tmpdir):
     db_path = tmpdir.join("db")
-    database = grnpy.Database.create(db_path)
-    del database
-    database = grnpy.Database.open(db_path)
-    del database
+    with grnpy.Database.create(db_path) as database:
+        pass
+    with grnpy.Database.open(db_path) as database:
+        pass

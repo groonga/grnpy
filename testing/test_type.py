@@ -20,9 +20,6 @@ import grnpy
 
 def test_create(tmpdir):
     db_path = tmpdir.join('db')
-    database = grnpy.Database.create(db_path)
-    try:
+    with grnpy.Database.create(db_path) as database:
         short_text = grnpy.context.default()['ShortText']
         assert short_text.name() == 'ShortText'
-    finally:
-        database.close()

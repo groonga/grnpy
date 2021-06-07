@@ -86,6 +86,12 @@ cdef class Object:
         self._obj = NULL
         self._context = None
 
+    def __enter__(self):
+        return self
+
+    def __exit__(self, type, value, traceback):
+        self.close()
+
 def resolve_class(uint8_t type):
     if type == grnpy.grn_obj.TABLE_NO_KEY:
         return Array

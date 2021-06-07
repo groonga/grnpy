@@ -20,10 +20,7 @@ import grnpy
 
 def test_create(tmpdir):
     db_path = tmpdir.join('db')
-    database = grnpy.Database.create(db_path)
-    try:
+    with grnpy.Database.create(db_path) as database:
         array = grnpy.Array.create('Users')
         column = array.create_vector_column('tags', 'ShortText')
         assert column.name() == 'Users.tags'
-    finally:
-        database.close()

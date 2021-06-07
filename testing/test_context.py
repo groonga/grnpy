@@ -1,4 +1,4 @@
-# Copyright (C) 2020  Sutou Kouhei <kou@clear-code.com>
+# Copyright (C) 2020-2021  Sutou Kouhei <kou@clear-code.com>
 #
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU Lesser General Public License as
@@ -24,9 +24,6 @@ def test_rc():
 
 def test_find(tmpdir):
     db_path = tmpdir.join("db")
-    database = grnpy.Database.create(db_path)
-    try:
+    with grnpy.Database.create(db_path) as database:
         array = grnpy.Array.create("Users")
         assert grnpy.find("Users") == array
-    finally:
-        database.close()

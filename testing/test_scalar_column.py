@@ -20,10 +20,7 @@ import grnpy
 
 def test_create(tmpdir):
     db_path = tmpdir.join('db')
-    database = grnpy.Database.create(db_path)
-    try:
+    with grnpy.Database.create(db_path) as database:
         array = grnpy.Array.create('Users')
         column = array.create_scalar_column('name', 'ShortText')
         assert column.name() == 'Users.name'
-    finally:
-        database.close()
