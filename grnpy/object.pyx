@@ -30,6 +30,8 @@ from grnpy.context cimport Context
 from .array import Array
 from .database import Database
 from .error import Error
+from .fixed_size_column import FixedSizeColumn
+from .variable_size_column import VariableSizeColumn
 from .type import Type
 import grnpy.initializer
 
@@ -87,6 +89,10 @@ cdef class Object:
 def resolve_class(uint8_t type):
     if type == grnpy.grn_obj.TABLE_NO_KEY:
         return Array
+    elif type == grnpy.grn_obj.COLUMN_FIX_SIZE:
+        return FixedSizeColumn
+    elif type == grnpy.grn_obj.COLUMN_VAR_SIZE:
+        return VariableSizeColumn
     elif type == grnpy.grn_obj.TYPE:
         return Type
     elif type == grnpy.grn_obj.DB:

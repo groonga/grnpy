@@ -18,5 +18,5 @@
 
 from grnpy.object cimport Object
 
-cdef class Type(Object):
+cdef class Column(Object):
     pass

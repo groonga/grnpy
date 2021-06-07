@@ -14,9 +14,16 @@
 # License along with this program.  If not, see
 # <http://www.gnu.org/licenses/>.
 
-# cython: language_level = 3
+import pytest
 
-from grnpy.object cimport Object
+import grnpy
 
-cdef class Type(Object):
-    pass
+def test_create(tmpdir):
+    db_path = tmpdir.join('db')
+    database = grnpy.Database.create(db_path)
+    try:
+        array = grnpy.Array.create('Users')
+        column = array.create_scalar_column('name', 'ShortText')
+        assert column.name() == 'Users.name'
+    finally:
+        database.close()

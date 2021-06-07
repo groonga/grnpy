@@ -15,8 +15,3 @@
 # <http://www.gnu.org/licenses/>.
 
 # cython: language_level = 3
-
-from grnpy.object cimport Object
-
-cdef class Type(Object):
-    pass

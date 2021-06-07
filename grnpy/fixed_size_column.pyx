@@ -16,7 +16,7 @@
 
 # cython: language_level = 3
 
-from grnpy.object cimport Object
+from grnpy.column cimport Column
 
-cdef class Type(Object):
+cdef class FixedSizeColumn(Column):
     pass
