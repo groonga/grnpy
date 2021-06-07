@@ -71,13 +71,13 @@ cdef class Table:
             self._context.check(f"failed to create column: <{name_original}>")
         return build_object(self._context, column)
 
-    def create_scalar_column(self,
-                             name,
-                             value_type,
-                             persistent=True,
-                             path=None,
-                             compression=None):
-        flags = grnpy.grn_column.SCALAR
+    def _create_data_column(self,
+                            name,
+                            flags,
+                            value_type,
+                            persistent,
+                            path,
+                            compression):
         if persistent:
             flags |= grnpy.grn_column.PERSISTENT
         if compression == 'zlib':
@@ -97,3 +97,29 @@ cdef class Table:
                                    path,
                                    flags,
                                    value_type)
+
+    def create_scalar_column(self,
+                             name,
+                             value_type,
+                             persistent=True,
+                             path=None,
+                             compression=None):
+        return self._create_data_column(name,
+                                        grnpy.grn_column.SCALAR,
+                                        value_type,
+                                        persistent,
+                                        path,
+                                        compression)
+
+    def create_vector_column(self,
+                             name,
+                             value_type,
+                             persistent=True,
+                             path=None,
+                             compression=None):
+        return self._create_data_column(name,
+                                        grnpy.grn_column.VECTOR,
+                                        value_type,
+                                        persistent,
+                                        path,
+                                        compression)
