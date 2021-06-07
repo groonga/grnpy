@@ -89,7 +89,7 @@ def resolve_class(uint8_t type):
     elif type == grnpy.grn_obj.DB:
         return Database
     else:
-        raise NotImplemented(f"unsupported type: {type}")
+        raise NotImplementedError(f"unsupported type: {type}")
 
 cdef build_object(Context context, grn_obj *obj):
     cls = resolve_class(grnpy_obj_get_type(obj))
