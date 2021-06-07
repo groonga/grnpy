@@ -33,21 +33,20 @@ with open('README.md') as readme:
     long_description = readme.read()
 
 glob = Cython.Build.Dependencies.extended_iglob
-only_I = subprocess.run(['pkg-config', '--cflags-only-I', 'groonga'],
-                        capture_output=True,
-                        check=True,
-                        encoding='utf-8')
-include_dirs = re.split(r'\s*-I', only_I.stdout.strip())[1::]
-only_L = subprocess.run(['pkg-config', '--libs-only-L', 'groonga'],
-                        capture_output=True,
-                        check=True,
-                        encoding='utf-8')
-library_dirs = re.split(r'\s*-L', only_L.stdout.strip())[1::]
-only_l = subprocess.run(['pkg-config', '--libs-only-l', 'groonga'],
-                        capture_output=True,
-                        check=True,
-                        encoding='utf-8')
-libraries = re.split(r'\s*-l', only_l.stdout.strip())[1::]
+
+def pkg_config(*args):
+    process = subprocess.run(['pkg-config', *args],
+                             stdout=subprocess.PIPE,
+                             check=True,
+                             encoding='utf-8')
+    return process.stdout
+
+only_I = pkg_config('--cflags-only-I', 'groonga')
+include_dirs = re.split(r'\s*-I', only_I.strip())[1::]
+only_L = pkg_config('--libs-only-L', 'groonga')
+library_dirs = re.split(r'\s*-L', only_L.strip())[1::]
+only_l = pkg_config('--libs-only-l', 'groonga')
+libraries = re.split(r'\s*-l', only_l.strip())[1::]
 extension = [
     setuptools.Extension('*',
                          ['grnpy/*.pyx'],
