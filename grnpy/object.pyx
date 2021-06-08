@@ -32,6 +32,7 @@ from .database import Database
 from .error import Error
 from .fixed_size_column import FixedSizeColumn
 from .hash_table import HashTable
+from .patricia_trie import PatriciaTrie
 from .type import Type
 from .variable_size_column import VariableSizeColumn
 import grnpy.initializer
@@ -98,6 +99,8 @@ def resolve_class(uint8_t type):
         return Array
     elif type == grnpy.grn_obj.TABLE_HASH_KEY:
         return HashTable
+    elif type == grnpy.grn_obj.TABLE_PAT_KEY:
+        return PatriciaTrie
     elif type == grnpy.grn_obj.COLUMN_FIX_SIZE:
         return FixedSizeColumn
     elif type == grnpy.grn_obj.COLUMN_VAR_SIZE:
