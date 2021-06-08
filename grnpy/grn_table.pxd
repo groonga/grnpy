@@ -40,6 +40,3 @@ cdef extern from "groonga.h":
                               grn_table_flags flags,
                               grn_obj *key_type,
                               grn_obj *value_type)
-
-cdef inline grn_table_flags parse_flags(flags):
-    return 0

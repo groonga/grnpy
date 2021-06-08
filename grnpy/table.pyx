@@ -23,6 +23,7 @@ from grnpy.grn_error cimport grn_rc
 from grnpy.grn_obj cimport grn_obj
 
 cimport grnpy.grn_column
+cimport grnpy.grn_table
 
 from grnpy.context cimport Context
 from grnpy.object cimport Object, build_object
@@ -32,6 +33,62 @@ from .error import Error
 import grnpy.context
 
 cdef class Table:
+    @classmethod
+    def _create(cls,
+                grnpy.grn_table.grn_table_flags flags,
+                name,
+                path,
+                key_type,
+                value_type,
+                Context context):
+        if context is None:
+            context = grnpy.context.default()
+        name_original = name
+        if isinstance(name, str):
+            name = name.encode()
+        cdef const char *name_c
+        cdef unsigned int name_c_size
+        if name is None:
+            name_c = NULL
+            name_c_size = 0
+        else:
+            name_c = name
+            name_c_size = len(name)
+            flags |= grnpy.grn_table.PERSISTENT
+        if path is not None:
+            path = os.fspath(path)
+        if isinstance(path, str):
+            path = path.encode()
+        cdef const char *path_c
+        if path is None:
+            path_c = NULL
+        else:
+            path_c = path
+        cdef grn_obj *key_type_c
+        if isinstance(key_type, str):
+            key_type = context[key_type]
+        if key_type is None:
+            key_type_c = NULL
+        else:
+            key_type_c = (<Object>key_type).unwrap()
+        cdef grn_obj *value_type_c
+        if isinstance(value_type, str):
+            value_type = context[value_type]
+        if value_type is None:
+            value_type_c = NULL
+        else:
+            value_type_c = (<Object>value_type).unwrap()
+        table = grnpy.grn_table.grn_table_create(context.unwrap(),
+                                                 name_c,
+                                                 name_c_size,
+                                                 path_c,
+                                                 flags,
+                                                 key_type_c,
+                                                 value_type_c)
+        if table is NULL:
+            context.check(f"failed to create table: <{name_original}>")
+        return build_object(context, table)
+
     def _create_column(self,
                        name,
                        path,

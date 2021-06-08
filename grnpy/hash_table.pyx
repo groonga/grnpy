@@ -1,4 +1,4 @@
-# Copyright (C) 2020-2021  Sutou Kouhei <kou@clear-code.com>
+# Copyright (C) 2021  Sutou Kouhei <kou@clear-code.com>
 #
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU Lesser General Public License as
@@ -14,16 +14,25 @@
 # License along with this program.  If not, see
 # <http://www.gnu.org/licenses/>.
 
-from grnpy.context import Context
-import grnpy.context
+# cython: language_level = 3
 
-from grnpy.array import Array
-from grnpy.database import Database
-from grnpy.hash_table import HashTable
+cimport grnpy.grn_table
 
-import grnpy.rc
+from grnpy.context cimport Context
+from grnpy.object cimport Object
+from grnpy.table cimport Table
 
-def find(name_or_id):
-    return grnpy.context.default()[name_or_id]
-
-__version__ = '10.0.7'
+cdef class HashTable(Table):
+    @classmethod
+    def create(cls,
+               key_type,
+               name=None,
+               path=None,
+               value_type=None,
+               Context context=None):
+        return cls._create(grnpy.grn_table.HASH_KEY,
+                           name,
+                           path,
+                           key_type,
+                           value_type,
+                           context)
