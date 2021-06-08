@@ -19,7 +19,6 @@
 cimport grnpy.grn_table
 
 from grnpy.context cimport Context
-from grnpy.object cimport Object
 from grnpy.table cimport Table
 
 cdef class HashTable(Table):

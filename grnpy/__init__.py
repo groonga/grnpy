@@ -19,6 +19,7 @@ import grnpy.context
 
 from grnpy.array import Array
 from grnpy.database import Database
+from grnpy.double_array_trie import DoubleArrayTrie
 from grnpy.hash_table import HashTable
 from grnpy.patricia_trie import PatriciaTrie
 

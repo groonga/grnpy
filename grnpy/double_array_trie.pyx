@@ -21,7 +21,7 @@ cimport grnpy.grn_table
 from grnpy.context cimport Context
 from grnpy.table cimport Table
 
-cdef class PatriciaTrie(Table):
+cdef class DoubleArrayTrie(Table):
     @classmethod
     def create(cls,
                key_type,
@@ -29,7 +29,7 @@ cdef class PatriciaTrie(Table):
                path=None,
                value_type=None,
                Context context=None):
-        return cls._create(grnpy.grn_table.PAT_KEY,
+        return cls._create(grnpy.grn_table.DAT_KEY,
                            name,
                            path,
                            key_type,

@@ -14,24 +14,12 @@
 # License along with this program.  If not, see
 # <http://www.gnu.org/licenses/>.
 
-# cython: language_level = 3
+import pytest
 
-cimport grnpy.grn_table
+import grnpy
 
-from grnpy.context cimport Context
-from grnpy.table cimport Table
-
-cdef class PatriciaTrie(Table):
-    @classmethod
-    def create(cls,
-               key_type,
-               name=None,
-               path=None,
-               value_type=None,
-               Context context=None):
-        return cls._create(grnpy.grn_table.PAT_KEY,
-                           name,
-                           path,
-                           key_type,
-                           value_type,
-                           context)
+def test_create(tmpdir):
+    db_path = tmpdir.join('db')
+    with grnpy.Database.create(db_path) as database:
+        double_array_trie = grnpy.DoubleArrayTrie.create('ShortText', 'Users')
+        assert double_array_trie.name() == 'Users'

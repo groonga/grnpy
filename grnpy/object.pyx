@@ -29,6 +29,7 @@ from grnpy.context cimport Context
 
 from .array import Array
 from .database import Database
+from .double_array_trie import DoubleArrayTrie
 from .error import Error
 from .fixed_size_column import FixedSizeColumn
 from .hash_table import HashTable
@@ -101,6 +102,8 @@ def resolve_class(uint8_t type):
         return HashTable
     elif type == grnpy.grn_obj.TABLE_PAT_KEY:
         return PatriciaTrie
+    elif type == grnpy.grn_obj.TABLE_DAT_KEY:
+        return DoubleArrayTrie
     elif type == grnpy.grn_obj.COLUMN_FIX_SIZE:
         return FixedSizeColumn
     elif type == grnpy.grn_obj.COLUMN_VAR_SIZE:

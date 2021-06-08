@@ -19,7 +19,6 @@
 cimport grnpy.grn_table
 
 from grnpy.context cimport Context
-from grnpy.object cimport Object
 from grnpy.table cimport Table
 
 cdef class Array(Table):
@@ -27,7 +26,7 @@ cdef class Array(Table):
     def create(cls,
                name=None,
                path=None,
-               Object value_type=None,
+               value_type=None,
                Context context=None):
         return cls._create(grnpy.grn_table.NO_KEY,
                            name,
