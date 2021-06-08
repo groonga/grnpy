@@ -1,4 +1,4 @@
-# Copyright (C) 2020-2021  Sutou Kouhei <kou@clear-code.com>
+# Copyright (C) 2021  Sutou Kouhei <kou@clear-code.com>
 #
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU Lesser General Public License as
@@ -14,19 +14,12 @@
 # License along with this program.  If not, see
 # <http://www.gnu.org/licenses/>.
 
-from grnpy.context import Context
-import grnpy.context
+import pytest
 
-from grnpy.array import Array
-from grnpy.database import Database
-from grnpy.double_array_trie import DoubleArrayTrie
-from grnpy.expression import Expression
-from grnpy.hash_table import HashTable
-from grnpy.patricia_trie import PatriciaTrie
+import grnpy
 
-import grnpy.rc
-
-def find(name_or_id):
-    return grnpy.context.default()[name_or_id]
-
-__version__ = '10.0.7'
+def test_create(tmpdir):
+    db_path = tmpdir.join('db')
+    with grnpy.Database.create(db_path) as database:
+        expression = grnpy.Expression()
+        assert expression.name() == ''

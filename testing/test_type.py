@@ -18,7 +18,7 @@ import pytest
 
 import grnpy
 
-def test_create(tmpdir):
+def test_instantiation(tmpdir):
     db_path = tmpdir.join('db')
     with grnpy.Database.create(db_path) as database:
         short_text = grnpy.find('ShortText')

@@ -32,7 +32,7 @@ from grnpy.table cimport Table
 from .error import Error
 import grnpy.context
 
-cdef class Table:
+cdef class Table(Object):
     @classmethod
     def _create(cls,
                 grnpy.grn_table.grn_table_flags flags,
