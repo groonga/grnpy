@@ -1,4 +1,4 @@
-# Copyright (C) 2020-2021  Sutou Kouhei <kou@clear-code.com>
+# Copyright (C) 2020-2023  Sutou Kouhei <kou@clear-code.com>
 #
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU Lesser General Public License as
@@ -25,10 +25,10 @@ jobs:
       fail-fast: false
       matrix:
         python-version:
-          - 3.6
-          - 3.7
-          - 3.8
-          - 3.9
+          - "3.8"
+          - "3.9"
+          - "3.10"
+          - "3.11"
         runs-on:
           # - macos-latest
           - ubuntu-latest
