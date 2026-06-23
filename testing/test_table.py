@@ -21,3 +21,37 @@ def test_len_empty(tmpdir):
     with grnpy.Database.create(db_path):
         users = grnpy.PatriciaTrie.create('ShortText', 'Users')
         assert len(users) == 0
+
+def test_load_hash(tmpdir):
+    db_path = tmpdir.join('db')
+    with grnpy.Database.create(db_path):
+        users = grnpy.HashTable.create('ShortText', 'Users')
+        users.create_scalar_column('age', 'Int32')
+        users.load([
+            {'_key': 'Groonga', 'age': 20},
+            {'_key': 'PGroonga', 'age': 30},
+        ])
+        assert len(users) == 2
+
+def test_load_patricia_trie(tmpdir):
+    db_path = tmpdir.join('db')
+    with grnpy.Database.create(db_path):
+        users = grnpy.PatriciaTrie.create('ShortText', 'Users')
+        users.create_scalar_column('age', 'Int32')
+        users.load([
+            {'_key': 'Groonga', 'age': 20},
+            {'_key': 'PGroonga', 'age': 30},
+        ])
+        assert len(users) == 2
+
+def test_load_array(tmpdir):
+    db_path = tmpdir.join('db')
+    with grnpy.Database.create(db_path):
+        users = grnpy.Array.create('Users')
+        users.create_scalar_column('name', 'ShortText')
+        users.create_scalar_column('age', 'Int32')
+        users.load([
+            {'name': 'Groonga', 'age': 20},
+            {'name': 'PGroonga', 'age': 30},
+        ])
+        assert len(users) == 2

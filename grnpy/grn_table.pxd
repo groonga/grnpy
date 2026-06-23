@@ -19,6 +19,7 @@
 from libc.stdint cimport uint32_t
 
 from grnpy.grn_ctx cimport grn_ctx
+from grnpy.grn_error cimport grn_rc
 from grnpy.grn_obj cimport grn_obj
 
 cdef extern from "groonga.h":
@@ -43,3 +44,19 @@ cdef extern from "groonga.h":
 
     unsigned int grn_table_size(grn_ctx *ctx,
                                 grn_obj *table)
+
+    ctypedef enum grn_content_type:
+        CONTENT_JSON "GRN_CONTENT_JSON"
+
+    grn_rc grn_load(grn_ctx *ctx,
+                    grn_content_type input_type,
+                    const char *table,
+                    unsigned int table_len,
+                    const char *columns,
+                    unsigned int columns_len,
+                    const char *values,
+                    unsigned int values_len,
+                    const char *ifexists,
+                    unsigned int ifexists_len,
+                    const char *each,
+                    unsigned int each_len);

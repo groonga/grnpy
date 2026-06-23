@@ -16,6 +16,7 @@
 
 # cython: language_level = 3
 
+import json
 import os
 
 from grnpy.grn_ctx cimport grn_ctx
@@ -184,3 +185,22 @@ cdef class Table(Object):
                                         persistent,
                                         path,
                                         compression)
+    def load(self, records):
+        cdef Context context = self._context
+        name = self.name().encode()
+        values = json.dumps(records).encode()
+        cdef const char *name_c = name
+        cdef const char *values_c = values
+        grnpy.grn_table.grn_load(context.unwrap(),
+                                 grnpy.grn_table.CONTENT_JSON,
+                                 name_c,
+                                 len(name),
+                                 NULL,
+                                 0,
+                                 values_c,
+                                 len(values),
+                                 NULL,
+                                 0,
+                                 NULL,
+                                 0)
+        context.check("failed to load records")
