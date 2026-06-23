@@ -33,6 +33,10 @@ from .error import Error
 import grnpy.context
 
 cdef class Table(Object):
+    def __len__(self):
+        cdef Context context = self._context
+        return grnpy.grn_table.grn_table_size(context.unwrap(), self.unwrap())
+
     @classmethod
     def _create(cls,
                 grnpy.grn_table.grn_table_flags flags,
