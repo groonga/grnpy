@@ -40,3 +40,6 @@ cdef extern from "groonga.h":
                               grn_table_flags flags,
                               grn_obj *key_type,
                               grn_obj *value_type)
+
+    unsigned int grn_table_size(grn_ctx *ctx,
+                                grn_obj *table)
