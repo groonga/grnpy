@@ -21,3 +21,27 @@ def test_len_empty(tmpdir):
     with grnpy.Database.create(db_path):
         users = grnpy.PatriciaTrie.create('ShortText', 'Users')
         assert len(users) == 0
+
+def test_add_hash(tmpdir):
+    db_path = tmpdir.join('db')
+    with grnpy.Database.create(db_path):
+        users = grnpy.HashTable.create('ShortText', 'Users')
+        assert users.add('Groonga') == 1
+        assert users.add('PGroonga') == 2
+        assert len(users) == 2
+
+def test_add_patricia_trie(tmpdir):
+    db_path = tmpdir.join('db')
+    with grnpy.Database.create(db_path):
+        users = grnpy.PatriciaTrie.create('ShortText', 'Users')
+        assert users.add('Groonga') == 1
+        assert users.add('PGroonga') == 2
+        assert len(users) == 2
+
+def test_add_array(tmpdir):
+    db_path = tmpdir.join('db')
+    with grnpy.Database.create(db_path):
+        users = grnpy.Array.create('Users')
+        assert users.add() == 1
+        assert users.add() == 2
+        assert len(users) == 2
