@@ -20,6 +20,7 @@ import os
 
 from grnpy.grn_ctx cimport grn_ctx
 from grnpy.grn_error cimport grn_rc
+from grnpy.grn_id cimport grn_id, NIL
 from grnpy.grn_obj cimport grn_obj
 
 cimport grnpy.grn_column
@@ -184,3 +185,26 @@ cdef class Table(Object):
                                         persistent,
                                         path,
                                         compression)
+
+    def add(self, key=None):
+        cdef Context context = self._context
+        key_original = key
+        if isinstance(key, str):
+            key = key.encode()
+        cdef const char *key_c
+        cdef unsigned int key_size
+        if key is None:
+            key_c = NULL
+            key_size = 0
+        else:
+            key_c = key
+            key_size = len(key)
+        cdef int added = 0
+        cdef grn_id id = grnpy.grn_table.grn_table_add(context.unwrap(),
+                                                       self.unwrap(),
+                                                       key_c,
+                                                       key_size,
+                                                       &added)
+        if id == NIL:
+            context.check(f"failed to add a record: <{key_original}>")
+        return id

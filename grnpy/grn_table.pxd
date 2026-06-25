@@ -19,6 +19,7 @@
 from libc.stdint cimport uint32_t
 
 from grnpy.grn_ctx cimport grn_ctx
+from grnpy.grn_id cimport grn_id
 from grnpy.grn_obj cimport grn_obj
 
 cdef extern from "groonga.h":
@@ -43,3 +44,9 @@ cdef extern from "groonga.h":
 
     unsigned int grn_table_size(grn_ctx *ctx,
                                 grn_obj *table)
+
+    grn_id grn_table_add(grn_ctx *ctx,
+                         grn_obj *table,
+                         const void *key,
+                         unsigned int key_size,
+                         int *added)
