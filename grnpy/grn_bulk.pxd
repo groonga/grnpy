@@ -16,6 +16,8 @@
 
 # cython: language_level = 3
 
+from libc.stddef cimport size_t
+
 from grnpy.grn_ctx cimport grn_ctx
 from grnpy.grn_error cimport grn_rc
 from grnpy.grn_obj cimport grn_obj

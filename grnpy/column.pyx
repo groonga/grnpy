@@ -68,6 +68,8 @@ cdef class Column(Object):
         cdef grn_ctx *ctx = context.unwrap()
 
         cdef grn_obj *value_c = self._to_grn_obj(value)
-        grn_obj_set_value(ctx, self.unwrap(), id, value_c, SET)
-        grn_obj_close(ctx, value_c)
-        context.check(f"failed to set a value: <{value}>")
+        try:
+            grn_obj_set_value(ctx, self.unwrap(), id, value_c, SET)
+            context.check(f"failed to set a value: <{value}>")
+        finally:
+            grn_obj_close(ctx, value_c)
