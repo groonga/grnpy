@@ -16,10 +16,15 @@
 
 # cython: language_level = 3
 
-from libc.stdint cimport uint8_t
+from libc.stdint cimport uint8_t, uint16_t
+
+from grnpy.grn_ctx cimport grn_ctx
+from grnpy.grn_error cimport grn_rc
+from grnpy.grn_id cimport grn_id
 
 cdef extern from "groonga.h":
     ctypedef uint8_t grn_obj_type
+    ctypedef uint16_t grn_obj_flags
 
     cdef grn_obj_type VOID "GRN_VOID"
     cdef grn_obj_type BULK "GRN_BULK"
@@ -53,5 +58,20 @@ cdef extern from "groonga.h":
     cdef grn_obj_type COLUMN_VAR_SIZE "GRN_COLUMN_VAR_SIZE"
     cdef grn_obj_type COLUMN_INDEX "GRN_COLUMN_INDEX"
 
+    cdef int SET "GRN_OBJ_SET"
+
     ctypedef struct grn_obj:
         pass
+
+    grn_obj *grn_obj_open(grn_ctx *ctx,
+                          unsigned char type,
+                          grn_obj_flags flags,
+                          grn_id domain)
+
+    grn_rc grn_obj_close(grn_ctx *ctx, grn_obj *obj)
+
+    grn_rc grn_obj_set_value(grn_ctx *ctx,
+                             grn_obj *obj,
+                             grn_id id,
+                             grn_obj *value,
+                             int flags)

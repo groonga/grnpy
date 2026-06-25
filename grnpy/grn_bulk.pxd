@@ -1,4 +1,4 @@
-# Copyright (C) 2021  Sutou Kouhei <kou@clear-code.com>
+# Copyright (C) 2026  Abe Tomoaki <abe@clear-code.com>
 #
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU Lesser General Public License as
@@ -16,8 +16,15 @@
 
 # cython: language_level = 3
 
-from grnpy.grn_obj cimport grn_obj
-from grnpy.object cimport Object
+from libc.stddef cimport size_t
 
-cdef class Column(Object):
-    cdef grn_obj *_to_grn_obj(self, value) except NULL
+from grnpy.grn_ctx cimport grn_ctx
+from grnpy.grn_error cimport grn_rc
+from grnpy.grn_obj cimport grn_obj
+
+cdef extern from "groonga.h":
+    grn_rc grn_bulk_write_from(grn_ctx *ctx,
+                               grn_obj *bulk,
+                               const char *str,
+                               size_t from_,
+                               size_t length)
