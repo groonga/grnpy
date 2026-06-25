@@ -22,3 +22,8 @@ cdef extern from "groonga.h":
     ctypedef uint32_t grn_id
     cdef grn_id NIL "GRN_ID_NIL"
     cdef grn_id MAX "GRN_ID_MAX"
+
+    cdef grn_id BOOL "GRN_DB_BOOL"
+    cdef grn_id FLOAT "GRN_DB_FLOAT"
+    cdef grn_id INT64 "GRN_DB_INT64"
+    cdef grn_id TEXT "GRN_DB_TEXT"
