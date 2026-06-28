@@ -93,7 +93,7 @@ cdef class Object:
             rc = grnpy_obj_set_text(ctx, self.unwrap(), id, value_bytes, len(value_bytes))
         else:
             raise TypeError(f"unsupported value type: <{type(value)}>")
-        Error.check(rc, f"failed to set a value: <{value}>")
+        Error.check(rc, f"failed to set a value: <{value}>", context.error_message())
 
     def __eq__(self, other):
         if not isinstance(other, self.__class__):
