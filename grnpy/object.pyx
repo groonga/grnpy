@@ -17,10 +17,11 @@
 # cython: language_level = 3
 # distutils: sources = grnpy/grnpy_obj.c
 
-from libc.stdint cimport uint8_t
+from libc.stdint cimport int64_t, uint8_t
 
 from grnpy.grn_ctx cimport grn_ctx
 from grnpy.grn_error cimport grn_rc
+from grnpy.grn_id cimport grn_id
 from grnpy.grn_obj cimport grn_obj
 
 cimport grnpy.grn_obj
@@ -45,6 +46,10 @@ cdef extern from "groonga.h":
 
 cdef extern from "grnpy_obj.h":
     uint8_t grnpy_obj_get_type(grn_obj *obj)
+    grn_rc grnpy_obj_set_bool(grn_ctx *ctx, grn_obj *obj, grn_id id, int value)
+    grn_rc grnpy_obj_set_int64(grn_ctx *ctx, grn_obj *obj, grn_id id, int64_t value)
+    grn_rc grnpy_obj_set_float(grn_ctx *ctx, grn_obj *obj, grn_id id, double value)
+    grn_rc grnpy_obj_set_text(grn_ctx *ctx, grn_obj *obj, grn_id id, const char *value, unsigned int length)
 
 cdef class Object:
     def __dealloc__(self):
@@ -72,6 +77,23 @@ cdef class Object:
                                    name_buffer,
                                    4096)
         return name_buffer[:name_length].decode('utf-8')
+
+    def set(self, grn_id id, value):
+        cdef Context context = self._context
+        cdef grn_ctx *ctx = context.unwrap()
+        cdef grn_rc rc
+        if isinstance(value, bool):
+            rc = grnpy_obj_set_bool(ctx, self.unwrap(), id, value)
+        elif isinstance(value, int):
+            rc = grnpy_obj_set_int64(ctx, self.unwrap(), id, value)
+        elif isinstance(value, float):
+            rc = grnpy_obj_set_float(ctx, self.unwrap(), id, value)
+        elif isinstance(value, str):
+            value_bytes = value.encode()
+            rc = grnpy_obj_set_text(ctx, self.unwrap(), id, value_bytes, len(value_bytes))
+        else:
+            raise TypeError(f"unsupported value type: <{type(value)}>")
+        Error.check(rc, f"failed to set a value: <{value}>", context.error_message())
 
     def __eq__(self, other):
         if not isinstance(other, self.__class__):

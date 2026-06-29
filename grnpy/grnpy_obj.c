@@ -23,3 +23,47 @@ grnpy_obj_get_type(grn_obj *obj)
 {
   return obj->header.type;
 }
+
+grn_rc
+grnpy_obj_set_bool(grn_ctx *ctx, grn_obj *obj, grn_id id, int value)
+{
+  grn_obj value_buffer;
+  GRN_BOOL_INIT(&value_buffer, 0);
+  GRN_BOOL_SET(ctx, &value_buffer, value);
+  grn_rc rc = grn_obj_set_value(ctx, obj, id, &value_buffer, GRN_OBJ_SET);
+  GRN_OBJ_FIN(ctx, &value_buffer);
+  return rc;
+}
+
+grn_rc
+grnpy_obj_set_int64(grn_ctx *ctx, grn_obj *obj, grn_id id, int64_t value)
+{
+  grn_obj value_buffer;
+  GRN_INT64_INIT(&value_buffer, 0);
+  GRN_INT64_SET(ctx, &value_buffer, value);
+  grn_rc rc = grn_obj_set_value(ctx, obj, id, &value_buffer, GRN_OBJ_SET);
+  GRN_OBJ_FIN(ctx, &value_buffer);
+  return rc;
+}
+
+grn_rc
+grnpy_obj_set_float(grn_ctx *ctx, grn_obj *obj, grn_id id, double value)
+{
+  grn_obj value_buffer;
+  GRN_FLOAT_INIT(&value_buffer, 0);
+  GRN_FLOAT_SET(ctx, &value_buffer, value);
+  grn_rc rc = grn_obj_set_value(ctx, obj, id, &value_buffer, GRN_OBJ_SET);
+  GRN_OBJ_FIN(ctx, &value_buffer);
+  return rc;
+}
+
+grn_rc
+grnpy_obj_set_text(grn_ctx *ctx, grn_obj *obj, grn_id id, const char *value, unsigned int length)
+{
+  grn_obj value_buffer;
+  GRN_TEXT_INIT(&value_buffer, GRN_OBJ_DO_SHALLOW_COPY);
+  GRN_TEXT_SET(ctx, &value_buffer, value, length);
+  grn_rc rc = grn_obj_set_value(ctx, obj, id, &value_buffer, GRN_OBJ_SET);
+  GRN_OBJ_FIN(ctx, &value_buffer);
+  return rc;
+}
