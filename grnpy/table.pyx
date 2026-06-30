@@ -29,6 +29,7 @@ cimport grnpy.grn_table
 from grnpy.context cimport Context
 from grnpy.object cimport Object, build_object
 from grnpy.table cimport Table
+from grnpy.table_cursor cimport TableCursor
 
 from .error import Error
 import grnpy.context
@@ -211,3 +212,6 @@ cdef class Table(Object):
 
     def set(self, grn_id id, value):
         self._set_value(id, value)
+
+    def open_cursor(self, limit=-1, offset=0):
+        return TableCursor(self, offset, limit)
