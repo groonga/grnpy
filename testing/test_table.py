@@ -54,3 +54,43 @@ def test_set(tmpdir):
         users.set(id, 29)
 
         # todo: Add a test for the set value
+
+def test_cursor_all(tmpdir):
+    db_path = tmpdir.join('db')
+    with grnpy.Database.create(db_path):
+        users = grnpy.PatriciaTrie.create('ShortText', 'Users')
+        users.add('Groonga')
+        users.add('PGroonga')
+        users.add('Mroonga')
+        with users.open_cursor() as cursor:
+            assert list(cursor) == [1, 2, 3]
+
+def test_cursor_limit(tmpdir):
+    db_path = tmpdir.join('db')
+    with grnpy.Database.create(db_path):
+        users = grnpy.PatriciaTrie.create('ShortText', 'Users')
+        users.add('Groonga')
+        users.add('PGroonga')
+        users.add('Mroonga')
+        with users.open_cursor(limit=1) as cursor:
+            assert list(cursor) == [1]
+
+def test_cursor_offset(tmpdir):
+    db_path = tmpdir.join('db')
+    with grnpy.Database.create(db_path):
+        users = grnpy.PatriciaTrie.create('ShortText', 'Users')
+        users.add('Groonga')
+        users.add('PGroonga')
+        users.add('Mroonga')
+        with users.open_cursor(offset=1) as cursor:
+            assert list(cursor) == [2, 3]
+
+def test_cursor_offset_limit(tmpdir):
+    db_path = tmpdir.join('db')
+    with grnpy.Database.create(db_path):
+        users = grnpy.PatriciaTrie.create('ShortText', 'Users')
+        users.add('Groonga')
+        users.add('PGroonga')
+        users.add('Mroonga')
+        with users.open_cursor(offset=1, limit=1) as cursor:
+            assert list(cursor) == [2]
