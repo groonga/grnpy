@@ -208,3 +208,6 @@ cdef class Table(Object):
         if id == NIL:
             context.check(f"failed to add a record: <{key_original}>")
         return id
+
+    def set(self, grn_id id, value):
+        self._set_value(id, value)

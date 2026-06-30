@@ -15,3 +15,10 @@
 # <http://www.gnu.org/licenses/>.
 
 # cython: language_level = 3
+
+from grnpy.grn_id cimport grn_id
+from grnpy.object cimport Object
+
+cdef class Column(Object):
+    def set(self, grn_id id, value):
+        self._set_value(id, value)

@@ -45,3 +45,12 @@ def test_add_array(tmpdir):
         assert users.add() == 1
         assert users.add() == 2
         assert len(users) == 2
+
+def test_set(tmpdir):
+    db_path = tmpdir.join('db')
+    with grnpy.Database.create(db_path):
+        users = grnpy.Array.create('Users', value_type='Int32')
+        id = users.add()
+        users.set(id, 29)
+
+        # todo: Add a test for the set value
