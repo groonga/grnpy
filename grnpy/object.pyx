@@ -78,7 +78,7 @@ cdef class Object:
                                    4096)
         return name_buffer[:name_length].decode('utf-8')
 
-    def set(self, grn_id id, value):
+    cdef _set_value(self, grn_id id, value):
         cdef Context context = self._context
         cdef grn_ctx *ctx = context.unwrap()
         cdef grn_rc rc

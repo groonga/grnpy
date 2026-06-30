@@ -16,6 +16,7 @@
 
 # cython: language_level = 3
 
+from grnpy.grn_id cimport grn_id
 from grnpy.grn_obj cimport grn_obj
 
 from grnpy.context cimport Context
@@ -25,5 +26,6 @@ cdef class Object:
     cdef grn_obj *_obj
 
     cdef grn_obj *unwrap(self)
+    cdef _set_value(self, grn_id id, value)
 
 cdef build_object(Context context, grn_obj *obj)
