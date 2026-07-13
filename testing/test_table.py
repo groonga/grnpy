@@ -53,7 +53,7 @@ def test_set(tmpdir):
         id = users.add()
         users.set(id, 29)
 
-        # todo: Add a test for the set value
+        assert users.get(id) == 29
 
 def test_cursor_all(tmpdir):
     db_path = tmpdir.join('db')

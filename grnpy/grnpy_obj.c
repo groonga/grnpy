@@ -24,6 +24,12 @@ grnpy_obj_get_type(grn_obj *obj)
   return obj->header.type;
 }
 
+grn_id
+grnpy_obj_get_domain(grn_obj *obj)
+{
+  return obj->header.domain;
+}
+
 grn_rc
 grnpy_obj_set_bool(grn_ctx *ctx, grn_obj *obj, grn_id id, int value)
 {

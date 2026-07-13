@@ -213,5 +213,8 @@ cdef class Table(Object):
     def set(self, grn_id id, value):
         self._set_value(id, value)
 
+    def get(self, grn_id id):
+        return self._get_value(id)
+
     def open_cursor(self, limit=-1, offset=0):
         return TableCursor(self, offset, limit)

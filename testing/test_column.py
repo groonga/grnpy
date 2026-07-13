@@ -31,4 +31,23 @@ def test_set_value(tmpdir):
         active.set(id, True)
         address.set(id, 'Tokyo')
 
-        # todo: Add a test for the set value
+        assert age.get(id) == 20
+        assert weight.get(id) == 70.5
+        assert active.get(id) is True
+        assert address.get(id) == 'Tokyo'
+
+def test_get_no_data(tmpdir):
+    db_path = tmpdir.join('db')
+    with grnpy.Database.create(db_path):
+        users = grnpy.PatriciaTrie.create('ShortText', 'Users')
+        age = users.create_scalar_column('age', 'Int32')
+        weight = users.create_scalar_column('weight', 'Float')
+        address = users.create_scalar_column('address', 'ShortText')
+        active = users.create_scalar_column('active', 'Bool')
+
+        id = users.add('Groonga')
+
+        assert age.get(id) == 0
+        assert weight.get(id) == 0.0
+        assert active.get(id) is False
+        assert address.get(id) is None

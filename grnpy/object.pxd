@@ -24,8 +24,11 @@ from grnpy.context cimport Context
 cdef class Object:
     cdef object _context
     cdef grn_obj *_obj
+    cdef grn_obj _value_buffer
 
     cdef grn_obj *unwrap(self)
     cdef _set_value(self, grn_id id, value)
+    cdef _bulk_to_python(self, grn_obj *bulk)
+    cdef _get_value(self, grn_id id)
 
 cdef build_object(Context context, grn_obj *obj)

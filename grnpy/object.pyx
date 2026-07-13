@@ -15,9 +15,19 @@
 # <http://www.gnu.org/licenses/>.
 
 # cython: language_level = 3
-# distutils: sources = grnpy/grnpy_obj.c
+# distutils: sources = grnpy/grnpy_bulk.c grnpy/grnpy_obj.c
 
-from libc.stdint cimport int64_t, uint8_t
+from libc.stdint cimport (
+    int8_t,
+    int16_t,
+    int32_t,
+    int64_t,
+    uint8_t,
+    uint16_t,
+    uint32_t,
+    uint64_t,
+)
+from libcpp cimport bool as c_bool
 
 from grnpy.grn_ctx cimport grn_ctx
 from grnpy.grn_error cimport grn_rc
@@ -25,6 +35,7 @@ from grnpy.grn_id cimport grn_id
 from grnpy.grn_obj cimport grn_obj
 
 cimport grnpy.grn_obj
+cimport grnpy.grn_type
 
 from grnpy.context cimport Context
 
@@ -43,19 +54,31 @@ cdef extern from "groonga.h":
     grn_rc grn_obj_close(grn_ctx *ctx, grn_obj *obj)
     void grn_obj_unref(grn_ctx *ctx, grn_obj *obj)
     int grn_obj_name(grn_ctx *ctx, grn_obj *obj, char *buffer, int buffer_size)
+    grn_obj *grn_obj_get_value(grn_ctx *ctx, grn_obj *obj, grn_id id, grn_obj *value)
+
+cdef extern from "grnpy_bulk.h":
+    void grnpy_bulk_init_void(grn_obj *bulk)
+    void grnpy_bulk_rewind(grn_obj *bulk)
+    const char *grnpy_bulk_get_head(grn_obj *bulk)
+    size_t grnpy_bulk_get_size(grn_obj *bulk)
 
 cdef extern from "grnpy_obj.h":
     uint8_t grnpy_obj_get_type(grn_obj *obj)
+    grn_id grnpy_obj_get_domain(grn_obj *obj)
     grn_rc grnpy_obj_set_bool(grn_ctx *ctx, grn_obj *obj, grn_id id, int value)
     grn_rc grnpy_obj_set_int64(grn_ctx *ctx, grn_obj *obj, grn_id id, int64_t value)
     grn_rc grnpy_obj_set_float(grn_ctx *ctx, grn_obj *obj, grn_id id, double value)
     grn_rc grnpy_obj_set_text(grn_ctx *ctx, grn_obj *obj, grn_id id, const char *value, unsigned int length)
 
 cdef class Object:
+    def __cinit__(self, *args, **kwargs):
+        grnpy_bulk_init_void(&(self._value_buffer))
+
     def __dealloc__(self):
         cdef Context context
         if self._obj is not NULL:
             context = self._context
+            grn_obj_close(context.unwrap(), &(self._value_buffer))
             # TODO: This may be not worked when a database is closed
             # and a table in the database isn't deleted yet.
             grn_obj_unref(context.unwrap(), self._obj)
@@ -95,6 +118,50 @@ cdef class Object:
             raise TypeError(f"unsupported value type: <{type(value)}>")
         Error.check(rc, f"failed to set a value: <{value}>", context.error_message())
 
+    cdef _bulk_to_python(self, grn_obj *bulk):
+        cdef Context context = self._context
+        cdef grn_id domain = grnpy_obj_get_domain(bulk)
+        cdef const char *head = grnpy_bulk_get_head(bulk)
+        cdef size_t size = grnpy_bulk_get_size(bulk)
+        if size == 0:
+            return None
+        if domain == grnpy.grn_type.BOOL:
+            return (<const c_bool *>head)[0]
+        elif domain == grnpy.grn_type.INT8:
+            return (<const int8_t *>head)[0]
+        elif domain == grnpy.grn_type.UINT8:
+            return (<const uint8_t *>head)[0]
+        elif domain == grnpy.grn_type.INT16:
+            return (<const int16_t *>head)[0]
+        elif domain == grnpy.grn_type.UINT16:
+            return (<const uint16_t *>head)[0]
+        elif domain == grnpy.grn_type.INT32:
+            return (<const int32_t *>head)[0]
+        elif domain == grnpy.grn_type.UINT32:
+            return (<const uint32_t *>head)[0]
+        elif domain == grnpy.grn_type.INT64:
+            return (<const int64_t *>head)[0]
+        elif domain == grnpy.grn_type.UINT64:
+            return (<const uint64_t *>head)[0]
+        elif domain == grnpy.grn_type.FLOAT32:
+            return (<const float *>head)[0]
+        elif domain == grnpy.grn_type.FLOAT:
+            return (<const double *>head)[0]
+        elif domain in (grnpy.grn_type.SHORT_TEXT,
+                        grnpy.grn_type.TEXT,
+                        grnpy.grn_type.LONG_TEXT):
+            return head[:size].decode(context.encoding_name())
+        else:
+            raise NotImplementedError(f"unsupported value type: <{domain}>")
+
+    cdef _get_value(self, grn_id id):
+        cdef Context context = self._context
+        cdef grn_ctx *ctx = context.unwrap()
+        grnpy_bulk_rewind(&(self._value_buffer))
+        grn_obj_get_value(ctx, self.unwrap(), id, &(self._value_buffer))
+        context.check(f"failed to get a value: <{id}>")
+        return self._bulk_to_python(&(self._value_buffer))
+
     def __eq__(self, other):
         if not isinstance(other, self.__class__):
             return False
@@ -107,6 +174,7 @@ cdef class Object:
             return
         if context is None:
             return
+        grn_obj_close(context.unwrap(), &(self._value_buffer))
         grn_obj_close(context.unwrap(), self._obj)
         self._obj = NULL
         self._context = None

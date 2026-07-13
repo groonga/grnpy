@@ -1,5 +1,5 @@
 /*
-  Copyright (C) 2020  Sutou Kouhei <kou@clear-code.com>
+  Copyright (C) 2026  Abe Tomoaki <abe@clear-code.com>
 
   This program is free software: you can redistribute it and/or modify
   it under the terms of the GNU Lesser General Public License as
@@ -16,14 +16,28 @@
   <http://www.gnu.org/licenses/>.
 */
 
-#pragma once
-
 #include <groonga.h>
 
-uint8_t grnpy_obj_get_type(grn_obj *obj);
-grn_id grnpy_obj_get_domain(grn_obj *obj);
+void
+grnpy_bulk_init_void(grn_obj *bulk)
+{
+  GRN_VOID_INIT(bulk);
+}
 
-grn_rc grnpy_obj_set_bool(grn_ctx *ctx, grn_obj *obj, grn_id id, int value);
-grn_rc grnpy_obj_set_int64(grn_ctx *ctx, grn_obj *obj, grn_id id, int64_t value);
-grn_rc grnpy_obj_set_float(grn_ctx *ctx, grn_obj *obj, grn_id id, double value);
-grn_rc grnpy_obj_set_text(grn_ctx *ctx, grn_obj *obj, grn_id id, const char *value, unsigned int length);
+void
+grnpy_bulk_rewind(grn_obj *bulk)
+{
+  GRN_BULK_REWIND(bulk);
+}
+
+const char *
+grnpy_bulk_get_head(grn_obj *bulk)
+{
+  return GRN_BULK_HEAD(bulk);
+}
+
+size_t
+grnpy_bulk_get_size(grn_obj *bulk)
+{
+  return GRN_BULK_VSIZE(bulk);
+}
