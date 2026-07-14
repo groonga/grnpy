@@ -23,3 +23,4 @@ cdef class Context:
     cdef grn_ctx *_ctx
 
     cdef grn_ctx *unwrap(self)
+    cdef encoding_name(self)

@@ -89,7 +89,7 @@ cdef class Object:
         elif isinstance(value, float):
             rc = grnpy_obj_set_float(ctx, self.unwrap(), id, value)
         elif isinstance(value, str):
-            value_bytes = value.encode()
+            value_bytes = value.encode(context.encoding_name())
             rc = grnpy_obj_set_text(ctx, self.unwrap(), id, value_bytes, len(value_bytes))
         else:
             raise TypeError(f"unsupported value type: <{type(value)}>")

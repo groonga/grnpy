@@ -18,9 +18,12 @@
 # distutils: sources = grnpy/grnpy_ctx.c
 
 from grnpy.grn_ctx cimport grn_ctx
+from grnpy.grn_encoding cimport grn_encoding
 from grnpy.grn_error cimport grn_rc
 from grnpy.grn_id cimport grn_id
 from grnpy.grn_obj cimport grn_obj
+
+cimport grnpy.grn_encoding
 
 from grnpy.object cimport build_object
 
@@ -39,6 +42,7 @@ cdef extern from "groonga.h":
 cdef extern from "grnpy_ctx.h":
     grn_rc grnpy_ctx_get_rc(grn_ctx *ctx)
     const char *grnpy_ctx_get_error_message(grn_ctx *ctx)
+    grn_encoding grnpy_ctx_get_encoding(grn_ctx *ctx)
 
 cdef class Context:
     def __cinit__(self, flags=0):
@@ -55,6 +59,23 @@ cdef class Context:
 
     cdef grn_ctx *unwrap(self):
         return self._ctx
+
+    cdef encoding_name(self):
+        # https://docs.python.org/3/library/codecs.html
+        cdef grn_encoding encoding = grnpy_ctx_get_encoding(self._ctx)
+        if encoding == grnpy.grn_encoding.UTF8:
+            return "utf_8"
+        elif encoding == grnpy.grn_encoding.EUC_JP:
+            return "euc_jp"
+        elif encoding == grnpy.grn_encoding.SJIS:
+            # CP932 has better coverage of special characters.
+            return "cp932"
+        elif encoding == grnpy.grn_encoding.LATIN1:
+            return "latin_1"
+        elif encoding == grnpy.grn_encoding.KOI8R:
+            return "koi8_r"
+        else:
+            raise NotImplementedError(f"unsupported encoding: <{encoding}>")
 
     def rc(self):
         return grnpy_ctx_get_rc(self._ctx)

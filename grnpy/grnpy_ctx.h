@@ -22,3 +22,4 @@
 
 grn_rc grnpy_ctx_get_rc(grn_ctx *ctx);
 const char *grnpy_ctx_get_error_message(grn_ctx *ctx);
+grn_encoding grnpy_ctx_get_encoding(grn_ctx *ctx);

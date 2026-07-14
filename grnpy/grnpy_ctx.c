@@ -29,3 +29,9 @@ grnpy_ctx_get_error_message(grn_ctx *ctx)
 {
   return ctx->errbuf;
 }
+
+grn_encoding
+grnpy_ctx_get_encoding(grn_ctx *ctx)
+{
+  return GRN_CTX_GET_ENCODING(ctx);
+}
