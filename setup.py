@@ -67,14 +67,10 @@ setuptools.setup(
         'pyarrow',
     ],
     python_requires='>=3',
-    tests_require=[
-        'pytest',
-    ],
     author='Sutou Kouhei',
     author_email='kou@clear-code.com',
     classifiers=[
         'Development Status :: 5 - Production/Stable',
-        'License :: OSI Approved :: GNU Lesser General Public License v3 or later (LGPLv3+)',
         'Intended Audience :: Developers',
         'Intended Audience :: Information Technology',
         'Intended Audience :: Science/Research',
@@ -89,7 +85,7 @@ setuptools.setup(
         'Topic :: Text Processing :: Indexing',
         'Topic :: Text Processing :: Linguistic',
     ],
-    license="LGPLv3+",
+    license="LGPL-3.0-or-later",
     url='https://github.com/groonga/grnpy',
     project_urls={
         'Source': 'https://github.com/groonga/grnpy',
