@@ -16,23 +16,12 @@
 # License along with this program.  If not, see
 # <http://www.gnu.org/licenses/>.
 
-import os
 import re
 import subprocess
-import sys
 
 import setuptools
 
 import Cython.Build
-
-with open('grnpy/__init__.py') as init_py:
-    version = re.search('__version__ = \'(.*?)\'',
-                        init_py.read())[1]
-
-with open('README.md') as readme:
-    long_description = readme.read()
-
-glob = Cython.Build.Dependencies.extended_iglob
 
 def pkg_config(*args):
     process = subprocess.run(['pkg-config', *args],
@@ -56,39 +45,6 @@ extension = [
 ]
 
 setuptools.setup(
-    name='grnpy',
-    version=version,
     packages=setuptools.find_packages(),
-    description='Fast full text search library based on Groonga',
-    long_description=long_description,
-    long_description_content_type='text/markdown',
     ext_modules=Cython.Build.cythonize(extension),
-    install_requires=[
-        'pyarrow',
-    ],
-    python_requires='>=3',
-    author='Sutou Kouhei',
-    author_email='kou@clear-code.com',
-    classifiers=[
-        'Development Status :: 5 - Production/Stable',
-        'Intended Audience :: Developers',
-        'Intended Audience :: Information Technology',
-        'Intended Audience :: Science/Research',
-        'Programming Language :: Python :: 3.6',
-        'Programming Language :: Python :: 3.7',
-        'Programming Language :: Python :: 3.8',
-        'Programming Language :: Python :: 3.9',
-        'Operating System :: MacOS :: MacOS X',
-        'Operating System :: Microsoft :: Windows',
-        'Operating System :: POSIX :: Linux',
-        'Topic :: Scientific/Engineering :: Information Analysis',
-        'Topic :: Text Processing :: Indexing',
-        'Topic :: Text Processing :: Linguistic',
-    ],
-    license="LGPL-3.0-or-later",
-    url='https://github.com/groonga/grnpy',
-    project_urls={
-        'Source': 'https://github.com/groonga/grnpy',
-        'Tracker': 'https://github.com/groonga/grnpy/issues',
-    },
 )
