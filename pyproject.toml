@@ -1,2 +1,41 @@
+[project]
+name = 'grnpy'
+dynamic = ['version']
+description = 'Fast full text search library based on Groonga'
+readme = 'README.md'
+license = 'LGPL-3.0-or-later'
+authors = [
+    {name = 'Sutou Kouhei', email = 'kou@clear-code.com'},
+]
+requires-python = '>=3'
+dependencies = [
+    'pyarrow',
+]
+classifiers = [
+    'Development Status :: 5 - Production/Stable',
+    'Intended Audience :: Developers',
+    'Intended Audience :: Information Technology',
+    'Intended Audience :: Science/Research',
+    'Programming Language :: Python :: 3.10',
+    'Programming Language :: Python :: 3.11',
+    'Programming Language :: Python :: 3.12',
+    'Programming Language :: Python :: 3.13',
+    'Programming Language :: Python :: 3.14',
+    'Operating System :: MacOS :: MacOS X',
+    'Operating System :: Microsoft :: Windows',
+    'Operating System :: POSIX :: Linux',
+    'Topic :: Scientific/Engineering :: Information Analysis',
+    'Topic :: Text Processing :: Indexing',
+    'Topic :: Text Processing :: Linguistic',
+]
+
+[project.urls]
+Homepage = 'https://github.com/groonga/grnpy'
+Source = 'https://github.com/groonga/grnpy'
+Tracker = 'https://github.com/groonga/grnpy/issues'
+
 [build-system]
 requires = ['setuptools', 'wheel', 'Cython']
+
+[tool.setuptools.dynamic]
+version = {attr = 'grnpy.__version__'}
